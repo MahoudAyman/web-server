@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <title>تسجيل جديد</title>
+</head>
+<body>
+  <h2>تسجيل حساب جديد</h2>
+
+  <input id="username" placeholder="اسم المستخدم"><br><br>
+  <input id="email" placeholder="البريد"><br><br>
+  <input id="password" type="password" placeholder="كلمة السر"><br><br>
+
+  <button id="signupBtn">تسجيل</button>
+  <p>لديك حساب؟ <a href="/">تسجيل الدخول</a></p>
+
+  <script>
+    document.getElementById("signupBtn").onclick = async () => {
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      if (data.status === "success") {
+        window.location.href = "/";
+      }
+    };
+  </script>
+</body>
+</html>

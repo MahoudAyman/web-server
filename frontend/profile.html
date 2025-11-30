@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8">
+  <title>الملف الشخصي</title>
+</head>
+<body>
+  <h2>الصفحة الشخصية</h2>
+  <div id="info">جاري التحميل...</div>
+  <button id="logout">تسجيل الخروج</button>
+
+  <script>
+    async function loadProfile() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("غير مسجل دخول");
+        window.location.href = "/";
+        return;
+      }
+
+      const res = await fetch("/profile", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+
+      const data = await res.json();
+      if (data.status === "success") {
+        const user = data.user;
+        document.getElementById("info").innerText = "مرحباً " + user.username + " (" + user.email + ")";
+      } else {
+        alert(data.message || "حدث خطأ");
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      }
+    }
+
+    document.getElementById("logout").onclick = () => {
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    };
+
+    loadProfile();
+  </script>
+</body>
+</html>
